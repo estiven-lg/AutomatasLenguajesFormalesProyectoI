@@ -114,8 +114,8 @@ public class MainScreen extends javax.swing.JPanel {
             texto = texto.replaceAll("\\s", "");
             char[] caracteres= texto.toCharArray();
             
-            boolean isValido = false;
-            int i = 0;
+            boolean isValido = false; 
+           int i = 0;
             
             while(i < caracteres.length){
                 isValido = false;
@@ -137,11 +137,26 @@ public class MainScreen extends javax.swing.JPanel {
             }
             
             if(isValido == false) {
-                lblConfirmacion.setText("Caracter no aceptado");
+                lblConfirmacion.setText("Sintaxis incorrecta: Carácter no aceptado");
                 lblConfirmacion.setForeground(Color.RED);
             }else{
-                lblConfirmacion.setText("Todo correcto");
-                lblConfirmacion.setForeground(Color.GREEN);
+                String[] cadenas = texto.split("(?<=;)");
+                for (String cadena : cadenas) {
+                    isValido = false;
+                    isValido = validarCadena(cadena);  
+                   
+                    if(isValido == false){
+                        break;
+                    }
+                }
+                
+                if(isValido){
+                    lblConfirmacion.setText("Sintaxis Correcta!!");
+                    lblConfirmacion.setForeground(Color.GREEN);
+                }else{
+                    lblConfirmacion.setText("Sintaxis incorrecta: Cadena incorrecta");
+                    lblConfirmacion.setForeground(Color.RED);
+                } 
             }
         } catch (SQLException ex) {
             Logger.getLogger(MainScreen.class.getName()).log(Level.SEVERE, null, ex);
@@ -158,4 +173,136 @@ public class MainScreen extends javax.swing.JPanel {
     private javax.swing.JLabel lblConfirmacion;
     private java.awt.TextArea txt_codigo;
     // End of variables declaration//GEN-END:variables
+
+        public static boolean esLetra(char c) {
+        return Character.isLetter(c);
+    }
+
+    // Función para verificar si es un dígito [0-9]
+    public static boolean esDigito(char c) {
+        return Character.isDigit(c);
+    }
+
+    // Función para verificar si es una operación [+ - * /]
+    public static boolean esOperacion(char c) {
+        return c == '+' || c == '-' || c == '*' || c == '/';
+    }
+
+    // Función para verificar si es un símbolo de asignación '='
+    public static boolean esAsignacion(char c) {
+        return c == '=';
+    }
+
+    // Función para verificar si es un símbolo de finalización ';'
+    public static boolean esFinalizacion(char c) {
+        return c == ';';
+    }
+    
+    // Función para verificar si es una comilla doble "
+    public static boolean esComillaDoble(char c) {
+        return c == '"';
+    }
+
+    // Función para verificar si es el símbolo de variable $
+    public static boolean esSimboloVariable(char c) {
+        return c == '$';
+    }
+    
+    enum Estado {INICIAL, VARIABLE, DECLARACION, OPERACION,ASIGNACION, VALOR, FINALIZACION, COMILLAS, VALOR_LITERAL, COMILLA_CIERRE}
+    
+    public static boolean validarCadena(String cadena) {
+        Estado estadoActual = Estado.INICIAL;
+
+        for (int i = 0; i < cadena.length(); i++) {
+            char c = cadena.charAt(i);
+
+            switch (estadoActual) {
+                case INICIAL:
+                    if (esSimboloVariable(c)) {
+                        estadoActual = Estado.VARIABLE; // Si empieza con $, pasa al estado VARIABLE
+                    } else {
+                        return false; // Si no empieza con $, no es válido
+                    }
+                    break;
+
+                case VARIABLE:
+                    if (esLetra(c)) {
+                        estadoActual = Estado.DECLARACION; // Después de $, se espera una letra
+                    }else {
+                        return false;
+                    }
+                    break;
+
+                case DECLARACION:
+                    if (esLetra(c)) {
+                        estadoActual = Estado.DECLARACION; // Sigue en declaración
+                    }else if (esDigito(c)){
+                        estadoActual = Estado.DECLARACION; // Sigue en declaración
+                    } else if (esAsignacion(c)) {
+                        estadoActual = Estado.ASIGNACION; // Pasa a estado de asignación
+                    } else {
+                        return false;
+                    }
+                    break;
+
+                case ASIGNACION:
+                    if (esDigito(c)) {
+                        estadoActual = Estado.VALOR; // Pasa a estado de valor
+                    }else if(esComillaDoble(c)){
+                        estadoActual = Estado.VALOR_LITERAL; // Pasa a estado de valor
+                    } else {
+                        return false;
+                    }
+                    break;
+
+                case VALOR:
+                    if (esDigito(c)) {
+                        estadoActual = Estado.VALOR; // Sigue en valor
+                    } else if (esOperacion(c)) {
+                        estadoActual = Estado.OPERACION; // Pasa a operación
+                    } else if (esFinalizacion(c)) {
+                        estadoActual = Estado.FINALIZACION; // Finaliza correctamente
+                    } else {
+                        return false;
+                    }
+                    break;
+                    
+                 case VALOR_LITERAL:
+                    if (esDigito(c)) {
+                        estadoActual = Estado.VALOR_LITERAL; // Sigue en valor
+                    }   else if (esLetra(c)) {
+                        estadoActual = Estado.VALOR_LITERAL; // Sigue en declaración
+                    } else if(esComillaDoble(c)){
+                        estadoActual = Estado.COMILLA_CIERRE; // Pasa a la comilla ciere
+                    }else {
+                        return false;
+                    }
+                    break;
+                    
+                case COMILLA_CIERRE:
+                    if (esFinalizacion(c)) {
+                        estadoActual = Estado.FINALIZACION; // Finaliza correctamente
+                    } else {
+                        return false;
+                    }
+                break;
+                    
+                case OPERACION:
+                    if (esDigito(c)) {
+                        estadoActual = Estado.VALOR; // Vuelve al estado de valor
+                    } else if (esLetra(c)) {
+                        estadoActual = Estado.DECLARACION; // Vuelve a declaración
+                    } else {
+                        return false;
+                    }
+                    break;
+
+                case FINALIZACION:
+                    return false; 
+            }
+        }
+
+        // Verificar si termina en un estado de finalización válido
+        return estadoActual == Estado.FINALIZACION;
+    }
 }
