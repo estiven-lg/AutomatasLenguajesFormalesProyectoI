@@ -19,7 +19,10 @@ public class MainMenu extends JFrame {
         JTabbedPane tabbedPane = new JTabbedPane();
 
  
-        tabbedPane.addTab("Codigo", new MainScreen());
+        
+        
+        // Añadir el contentPane de codifoAlfa al tabbedPane
+        tabbedPane.addTab("Código", new MainScreen());
         tabbedPane.addTab("Tabla de símbolos", new SimbolsTable());
         tabbedPane.addTab("Tablas de transiciones", new TransitionsTable());
 
