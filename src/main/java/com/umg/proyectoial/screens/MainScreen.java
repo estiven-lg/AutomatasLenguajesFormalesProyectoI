@@ -36,9 +36,11 @@ public class MainScreen extends javax.swing.JPanel {
     private void initComponents() {
 
         btn_validar = new javax.swing.JButton();
-        txt_codigo = new java.awt.TextArea();
+        txt_lexema = new java.awt.TextArea();
         lbl = new java.awt.Label();
         lblConfirmacion = new javax.swing.JLabel();
+        lbl_lexema = new java.awt.Label();
+        txt_codigo = new java.awt.TextArea();
 
         btn_validar.setText("Validar");
         btn_validar.addActionListener(new java.awt.event.ActionListener() {
@@ -47,44 +49,60 @@ public class MainScreen extends javax.swing.JPanel {
             }
         });
 
+        txt_lexema.setVisible(false);
+
+        lbl.setFont(new java.awt.Font("Dialog", 1, 12)); // NOI18N
         lbl.setText("Ingresar texto");
+
+        lbl_lexema.setFont(new java.awt.Font("Dialog", 1, 12)); // NOI18N
+        lbl_lexema.setText("Lexemas");
+        lbl_lexema.setVisible(false);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addContainerGap()
+                .addGap(28, 28, 28)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(txt_lexema, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(lbl_lexema, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(0, 0, Short.MAX_VALUE))
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(lbl, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(txt_codigo, javax.swing.GroupLayout.PREFERRED_SIZE, 293, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addContainerGap(40, Short.MAX_VALUE))
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                        .addGap(0, 0, Short.MAX_VALUE)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                                .addComponent(btn_validar)
-                                .addGap(175, 175, 175))
-                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                                .addComponent(lblConfirmacion)
-                                .addGap(65, 65, 65))))))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(btn_validar, javax.swing.GroupLayout.PREFERRED_SIZE, 98, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addContainerGap())
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(lblConfirmacion, javax.swing.GroupLayout.PREFERRED_SIZE, 230, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(29, 29, 29))
+            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(layout.createSequentialGroup()
+                    .addGap(38, 38, 38)
+                    .addComponent(txt_codigo, javax.swing.GroupLayout.DEFAULT_SIZE, 497, Short.MAX_VALUE)
+                    .addContainerGap()))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGap(101, 101, 101)
-                .addComponent(lbl, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addContainerGap(73, Short.MAX_VALUE)
-                .addComponent(txt_codigo, javax.swing.GroupLayout.PREFERRED_SIZE, 169, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGap(18, 18, 18)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(lbl, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(btn_validar))
+                .addGap(151, 151, 151)
                 .addComponent(lblConfirmacion)
-                .addGap(2, 2, 2)
-                .addComponent(btn_validar)
-                .addGap(23, 23, 23))
+                .addGap(12, 12, 12)
+                .addComponent(lbl_lexema, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 162, Short.MAX_VALUE)
+                .addComponent(txt_lexema, javax.swing.GroupLayout.PREFERRED_SIZE, 125, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(87, 87, 87))
+            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(layout.createSequentialGroup()
+                    .addGap(58, 58, 58)
+                    .addComponent(txt_codigo, javax.swing.GroupLayout.PREFERRED_SIZE, 125, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addContainerGap(270, Short.MAX_VALUE)))
         );
     }// </editor-fold>//GEN-END:initComponents
 
@@ -94,7 +112,7 @@ public class MainScreen extends javax.swing.JPanel {
             ResultSet rs = DatabaseConnection.executeQuery(query);
             ResultSetMetaData rsmd = rs.getMetaData();
             int columnCount = rsmd.getColumnCount();
-
+            String lexema = "";
             // Crear una lista para almacenar las filas (cada fila será un arreglo)
             ArrayList<Object[]> rows = new ArrayList<>();
 
@@ -113,8 +131,12 @@ public class MainScreen extends javax.swing.JPanel {
             texto = texto.trim();
             texto = texto.replaceAll("\\s", "");
             char[] caracteres= texto.toCharArray();
-            
+  
             boolean isValido = false; 
+            String valorAnt = "";
+            String lex = "";
+            String lexAnt = "";
+            String caracterAnt = "";
            int i = 0;
             
             while(i < caracteres.length){
@@ -123,9 +145,36 @@ public class MainScreen extends javax.swing.JPanel {
                 for (Object[] row : data) {
                     String caracter = Character.toString(caracteres[i]);
                     String validar = String.valueOf(row[0]);
-                    
+               
                    if(caracter.equals(validar)){
                        isValido = true;
+                       
+                       if ("$".equals(valorAnt) && "literal".equals(String.valueOf(row[1]))){
+                           lexAnt = "declaracion";
+                           caracterAnt = caracter;
+                           valorAnt = caracter; 
+                       }else if("declaracion".equals(lexAnt) && ("literal".equals(String.valueOf(row[1])) || "number".equals(String.valueOf(row[1])) ) ){
+                           lexAnt = "declaracion";
+                           caracterAnt += caracter; 
+                       }else if("declaracion".equals(lexAnt) && "operator".equals(String.valueOf(row[1])) ){
+                           lexAnt = "operator";
+                           valorAnt = caracter;
+                           lexema += "(Declaration , " + caracterAnt + "), \n";
+                           lexema += "(Assignment, " + caracter + "), \n";
+                           caracterAnt = "";
+                       }else if("operator".equals(lexAnt) && !caracter.equals(";") ){
+                           lexAnt = "operator";
+                           caracterAnt += caracter; 
+                       }else if(caracter.equals(";") ){
+                           lexema += "(Valor , " + caracterAnt + "), \n";
+                           lexema += "(Ending , " + caracter + "), \n\n";
+                           caracterAnt = "";
+                           lexAnt = "";
+                       }else{
+                           lex = String.valueOf(row[1]);
+                           valorAnt = caracter;
+                           lexema += "("+ lex +" , " + caracter + "), \n";
+                       }
                        break;
                    }
                 }
@@ -139,6 +188,8 @@ public class MainScreen extends javax.swing.JPanel {
             if(isValido == false) {
                 lblConfirmacion.setText("Sintaxis incorrecta: Carácter no aceptado");
                 lblConfirmacion.setForeground(Color.RED);
+                lbl_lexema.setVisible(false);
+                txt_lexema.setVisible(false);
             }else{
                 String[] cadenas = texto.split("(?<=;)");
                 for (String cadena : cadenas) {
@@ -153,9 +204,14 @@ public class MainScreen extends javax.swing.JPanel {
                 if(isValido){
                     lblConfirmacion.setText("Sintaxis Correcta!!");
                     lblConfirmacion.setForeground(Color.GREEN);
+                    lbl_lexema.setVisible(true);
+                    txt_lexema.setVisible(true);
+                    txt_lexema.setText(lexema);
                 }else{
                     lblConfirmacion.setText("Sintaxis incorrecta: Cadena incorrecta");
                     lblConfirmacion.setForeground(Color.RED);
+                    lbl_lexema.setVisible(false);
+                    txt_lexema.setVisible(false);
                 } 
             }
         } catch (SQLException ex) {
@@ -171,7 +227,9 @@ public class MainScreen extends javax.swing.JPanel {
     private javax.swing.JButton btn_validar;
     private java.awt.Label lbl;
     private javax.swing.JLabel lblConfirmacion;
+    private java.awt.Label lbl_lexema;
     private java.awt.TextArea txt_codigo;
+    private java.awt.TextArea txt_lexema;
     // End of variables declaration//GEN-END:variables
 
         public static boolean esLetra(char c) {
