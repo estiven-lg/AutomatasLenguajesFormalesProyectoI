@@ -1,0 +1,10 @@
+A = (Q, Σ, q0 , δ, F)
+Q: {Variable, Declaración, Operación, asignación, agrupación, finalización}
+Σ: {$, [a-zA-Z], [=+\-/*] [0-9],(),;}
+q0: (ε)
+δ: ;
+F:
+Nuestros estados son: Variable, Declaración, Operación, asignación, agrupación, finalización, el programa tiene que seguir cierto orden para ser ejecutado.
+El cual consiste en una variable, después de esta una declaración/operación/asignación, seguimos con un valor y finalizamos.
+Un ejemplo de este es:
+$num=12;
