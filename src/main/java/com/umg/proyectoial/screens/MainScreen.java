@@ -24,6 +24,15 @@ public class MainScreen extends javax.swing.JPanel {
      */
     public MainScreen() {
         initComponents();
+        this.txt_codigo.setText("""
+                                $sueldo = 2500;
+                                $bono = 1000;
+                                $gastos=1200;
+                                $impuestos=500;
+                                $ingresos = $bono + $sueldo;
+                                $egresos =  $gastos + $impuestos;
+                                $total= $ingresos-impuestos;
+                                $casa = $total /2;""");
     }
 
     /**
@@ -126,100 +135,99 @@ public class MainScreen extends javax.swing.JPanel {
             }
             // Convertir la lista a un arreglo (si es necesario)
             Object[][] data = rows.toArray(new Object[rows.size()][]);
-            
+
             String texto = txt_codigo.getText();
             texto = texto.trim();
             texto = texto.replaceAll("\\s", "");
-            char[] caracteres= texto.toCharArray();
-  
-            boolean isValido = false; 
+            char[] caracteres = texto.toCharArray();
+
+            boolean isValido = false;
             String valorAnt = "";
             String lex = "";
             String lexAnt = "";
             String caracterAnt = "";
-           int i = 0;
-            
-            while(i < caracteres.length){
+            int i = 0;
+
+            while (i < caracteres.length) {
                 isValido = false;
-                
+
                 for (Object[] row : data) {
                     String caracter = Character.toString(caracteres[i]);
                     String validar = String.valueOf(row[0]);
-               
-                   if(caracter.equals(validar)){
-                       isValido = true;
-                       
-                       if ("$".equals(valorAnt) && "literal".equals(String.valueOf(row[1]))){
-                           lexAnt = "declaracion";
-                           caracterAnt = caracter;
-                           valorAnt = caracter; 
-                       }else if("declaracion".equals(lexAnt) && ("literal".equals(String.valueOf(row[1])) || "number".equals(String.valueOf(row[1])) ) ){
-                           lexAnt = "declaracion";
-                           caracterAnt += caracter; 
-                       }else if("declaracion".equals(lexAnt) && "operator".equals(String.valueOf(row[1])) ){
-                           lexAnt = "operator";
-                           valorAnt = caracter;
-                           lexema += "(Declaration , " + caracterAnt + "), \n";
-                           lexema += "(Assignment, " + caracter + "), \n";
-                           caracterAnt = "";
-                       }else if("operator".equals(lexAnt) && !caracter.equals(";") ){
-                           lexAnt = "operator";
-                           caracterAnt += caracter; 
-                       }else if(caracter.equals(";") ){
-                           lexema += "(Valor , " + caracterAnt + "), \n";
-                           lexema += "(Ending , " + caracter + "), \n\n";
-                           caracterAnt = "";
-                           lexAnt = "";
-                       }else{
-                           lex = String.valueOf(row[1]);
-                           valorAnt = caracter;
-                           lexema += "("+ lex +" , " + caracter + "), \n";
-                       }
-                       break;
-                   }
+
+                    if (caracter.equals(validar)) {
+                        isValido = true;
+
+                        if ("$".equals(valorAnt) && "literal".equals(String.valueOf(row[1]))) {
+                            lexAnt = "declaracion";
+                            caracterAnt = caracter;
+                            valorAnt = caracter;
+                        } else if ("declaracion".equals(lexAnt) && ("literal".equals(String.valueOf(row[1])) || "number".equals(String.valueOf(row[1])))) {
+                            lexAnt = "declaracion";
+                            caracterAnt += caracter;
+                        } else if ("declaracion".equals(lexAnt) && "operator".equals(String.valueOf(row[1]))) {
+                            lexAnt = "operator";
+                            valorAnt = caracter;
+                            lexema += "(Declaration , " + caracterAnt + "), \n";
+                            lexema += "(Assignment, " + caracter + "), \n";
+                            caracterAnt = "";
+                        } else if ("operator".equals(lexAnt) && !caracter.equals(";")) {
+                            lexAnt = "operator";
+                            caracterAnt += caracter;
+                        } else if (caracter.equals(";")) {
+                            lexema += "(Valor , " + caracterAnt + "), \n";
+                            lexema += "(Ending , " + caracter + "), \n\n";
+                            caracterAnt = "";
+                            lexAnt = "";
+                        } else {
+                            lex = String.valueOf(row[1]);
+                            valorAnt = caracter;
+                            lexema += "(" + lex + " , " + caracter + "), \n";
+                        }
+                        break;
+                    }
                 }
-                
-                if(isValido == false) {
+
+                if (isValido == false) {
                     break;
                 }
                 i++;
             }
-            
-            if(isValido == false) {
+
+            if (isValido == false) {
                 lblConfirmacion.setText("Sintaxis incorrecta: Carácter no aceptado");
                 lblConfirmacion.setForeground(Color.RED);
                 lbl_lexema.setVisible(false);
                 txt_lexema.setVisible(false);
-            }else{
+            } else {
                 String[] cadenas = texto.split("(?<=;)");
                 for (String cadena : cadenas) {
                     isValido = false;
-                    isValido = validarCadena(cadena);  
-                   
-                    if(isValido == false){
+                    isValido = validarCadena(cadena);
+
+                    if (isValido == false) {
                         break;
                     }
                 }
-                
-                if(isValido){
+
+                if (isValido) {
                     lblConfirmacion.setText("Sintaxis Correcta!!");
                     lblConfirmacion.setForeground(Color.GREEN);
                     lbl_lexema.setVisible(true);
                     txt_lexema.setVisible(true);
                     txt_lexema.setText(lexema);
-                }else{
+                } else {
                     lblConfirmacion.setText("Sintaxis incorrecta: Cadena incorrecta");
                     lblConfirmacion.setForeground(Color.RED);
                     lbl_lexema.setVisible(false);
                     txt_lexema.setVisible(false);
-                } 
+                }
             }
         } catch (SQLException ex) {
             Logger.getLogger(MainScreen.class.getName()).log(Level.SEVERE, null, ex);
         }
-        
-        
-        
+
+
     }//GEN-LAST:event_btn_validarActionPerformed
 
 
@@ -232,7 +240,7 @@ public class MainScreen extends javax.swing.JPanel {
     private java.awt.TextArea txt_lexema;
     // End of variables declaration//GEN-END:variables
 
-        public static boolean esLetra(char c) {
+    public static boolean esLetra(char c) {
         return Character.isLetter(c);
     }
 
@@ -255,7 +263,7 @@ public class MainScreen extends javax.swing.JPanel {
     public static boolean esFinalizacion(char c) {
         return c == ';';
     }
-    
+
     // Función para verificar si es una comilla doble "
     public static boolean esComillaDoble(char c) {
         return c == '"';
@@ -265,9 +273,11 @@ public class MainScreen extends javax.swing.JPanel {
     public static boolean esSimboloVariable(char c) {
         return c == '$';
     }
-    
-    enum Estado {INICIAL, VARIABLE, DECLARACION, OPERACION,ASIGNACION, VALOR, FINALIZACION, COMILLAS, VALOR_LITERAL, COMILLA_CIERRE}
-    
+
+    enum Estado {
+        INICIAL, VARIABLE, DECLARACION, OPERACION, ASIGNACION, VALOR, FINALIZACION, COMILLAS, VALOR_LITERAL, COMILLA_CIERRE
+    }
+
     public static boolean validarCadena(String cadena) {
         Estado estadoActual = Estado.INICIAL;
 
@@ -286,7 +296,7 @@ public class MainScreen extends javax.swing.JPanel {
                 case VARIABLE:
                     if (esLetra(c)) {
                         estadoActual = Estado.DECLARACION; // Después de $, se espera una letra
-                    }else {
+                    } else {
                         return false;
                     }
                     break;
@@ -294,10 +304,14 @@ public class MainScreen extends javax.swing.JPanel {
                 case DECLARACION:
                     if (esLetra(c)) {
                         estadoActual = Estado.DECLARACION; // Sigue en declaración
-                    }else if (esDigito(c)){
+                    } else if (esDigito(c)) {
                         estadoActual = Estado.DECLARACION; // Sigue en declaración
+                    } else if (esOperacion(c)) {
+                        estadoActual = Estado.OPERACION; // Pasa a operación
                     } else if (esAsignacion(c)) {
                         estadoActual = Estado.ASIGNACION; // Pasa a estado de asignación
+                    } else if (esFinalizacion(c)) {
+                        estadoActual = Estado.FINALIZACION; // Finaliza correctamente
                     } else {
                         return false;
                     }
@@ -306,8 +320,10 @@ public class MainScreen extends javax.swing.JPanel {
                 case ASIGNACION:
                     if (esDigito(c)) {
                         estadoActual = Estado.VALOR; // Pasa a estado de valor
-                    }else if(esComillaDoble(c)){
+                    } else if (esComillaDoble(c)) {
                         estadoActual = Estado.VALOR_LITERAL; // Pasa a estado de valor
+                    } else if (esSimboloVariable(c)) {
+                        estadoActual = Estado.VARIABLE; // Si empieza con $, pasa al estado VARIABLE
                     } else {
                         return false;
                     }
@@ -324,39 +340,41 @@ public class MainScreen extends javax.swing.JPanel {
                         return false;
                     }
                     break;
-                    
-                 case VALOR_LITERAL:
+
+                case VALOR_LITERAL:
                     if (esDigito(c)) {
                         estadoActual = Estado.VALOR_LITERAL; // Sigue en valor
-                    }   else if (esLetra(c)) {
+                    } else if (esLetra(c)) {
                         estadoActual = Estado.VALOR_LITERAL; // Sigue en declaración
-                    } else if(esComillaDoble(c)){
+                    } else if (esComillaDoble(c)) {
                         estadoActual = Estado.COMILLA_CIERRE; // Pasa a la comilla ciere
-                    }else {
+                    } else {
                         return false;
                     }
                     break;
-                    
+
                 case COMILLA_CIERRE:
                     if (esFinalizacion(c)) {
                         estadoActual = Estado.FINALIZACION; // Finaliza correctamente
                     } else {
                         return false;
                     }
-                break;
-                    
+                    break;
+
                 case OPERACION:
                     if (esDigito(c)) {
                         estadoActual = Estado.VALOR; // Vuelve al estado de valor
                     } else if (esLetra(c)) {
                         estadoActual = Estado.DECLARACION; // Vuelve a declaración
+                    } else if (esSimboloVariable(c)) {
+                        estadoActual = Estado.VARIABLE; // Si empieza con $, pasa al estado VARIABLE
                     } else {
                         return false;
                     }
                     break;
 
                 case FINALIZACION:
-                    return false; 
+                    return false;
             }
         }
 
