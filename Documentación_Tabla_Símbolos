@@ -1,0 +1,25 @@
+Documentación de la Tabla de Símbolos
+
+La tabla de símbolos es una estructura fundamental en la fase de análisis léxico de un compilador o intérprete. 
+Su propósito principal es almacenar información sobre los lexemas (unidades mínimas del lenguaje) 
+y sus tipos correspondientes, permitiendo validar y clasificar correctamente los elementos del código fuente ingresado. 
+En este caso, la tabla se encuentra precargada con lexemas que representan literales, números, operadores, y delimitadores.
+Creación de la Tabla de Símbolos
+La siguiente instrucción SQL crea la tabla symbolsTable en SQL Server. Esta tabla será utilizada para almacenar los lexemas que se reconocerán en el código fuente:
+
+
+
+Descripción de los Campos
+id: Identificador único de cada lexema en la tabla. Este campo es autoincremental y permite diferenciar cada entrada.
+lexeme: El lexema en sí, que puede ser una variable, un número, un operador, etc.
+type: Clasificación del lexema según su función en el lenguaje. Los posibles tipos incluyen:
+literal: Letras del alfabeto utilizadas para identificar variables o nombres.
+number: Números del 0 al 9.
+variablePrefix: Prefijo especial como el signo $ utilizado para definir una variable.
+operator: Operadores matemáticos o de asignación (+, -, *, /, =).
+delimiter: Símbolos que delimitan bloques de código, como {}, ; y comillas.
+pattern: Expresión que describe el rango o patrón asociado al lexema (por ejemplo, letras de la a a la z).
+Inserción de Lexemas
+La siguiente consulta SQL inserta los registros correspondientes a los diferentes tipos de lexemas:
+
+
