@@ -8,7 +8,6 @@ Creación de la Tabla de Símbolos
 La siguiente instrucción SQL crea la tabla symbolsTable en SQL Server. Esta tabla será utilizada para almacenar los lexemas que se reconocerán en el código fuente:
 
 
-
 Descripción de los Campos
 id: Identificador único de cada lexema en la tabla. Este campo es autoincremental y permite diferenciar cada entrada.
 lexeme: El lexema en sí, que puede ser una variable, un número, un operador, etc.
