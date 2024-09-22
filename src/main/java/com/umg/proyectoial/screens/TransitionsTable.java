@@ -53,7 +53,9 @@ public class TransitionsTable extends JPanel {
         transitions.add(new Transition(states.get(4), states.get(2))); // Valor -> Operacion
         transitions.add(new Transition(states.get(4), states.get(3))); // Valor -> Asignacion
         transitions.add(new Transition(states.get(4), states.get(4))); // Valor -> Valor
-        transitions.add(new Transition(states.get(5), states.get(4))); // Finalizacion -> Valor
+        transitions.add(new Transition(states.get(5), states.get(4))); // Finalizacion -> Valor   
+        transitions.add(new Transition(states.get(5), states.get(0))); // Finalizacion -> Valor
+
     }
 
     @Override
