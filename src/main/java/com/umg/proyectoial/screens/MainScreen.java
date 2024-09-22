@@ -157,33 +157,10 @@ public class MainScreen extends javax.swing.JPanel {
 
                     if (caracter.equals(validar)) {
                         isValido = true;
-
-                        if ("$".equals(valorAnt) && "literal".equals(String.valueOf(row[1]))) {
-                            lexAnt = "declaracion";
-                            caracterAnt = caracter;
-                            valorAnt = caracter;
-                        } else if ("declaracion".equals(lexAnt) && ("literal".equals(String.valueOf(row[1])) || "number".equals(String.valueOf(row[1])))) {
-                            lexAnt = "declaracion";
-                            caracterAnt += caracter;
-                        } else if ("declaracion".equals(lexAnt) && "operator".equals(String.valueOf(row[1]))) {
-                            lexAnt = "operator";
-                            valorAnt = caracter;
-                            lexema += "(Declaration , " + caracterAnt + "), \n";
-                            lexema += "(Assignment, " + caracter + "), \n";
-                            caracterAnt = "";
-                        } else if ("operator".equals(lexAnt) && !caracter.equals(";")) {
-                            lexAnt = "operator";
-                            caracterAnt += caracter;
-                        } else if (caracter.equals(";")) {
-                            lexema += "(Valor , " + caracterAnt + "), \n";
-                            lexema += "(Ending , " + caracter + "), \n\n";
-                            caracterAnt = "";
-                            lexAnt = "";
-                        } else {
                             lex = String.valueOf(row[1]);
                             valorAnt = caracter;
                             lexema += "(" + lex + " , " + caracter + "), \n";
-                        }
+
                         break;
                     }
                 }
